@@ -1,0 +1,6 @@
+openai
+sentence-transformers
+numpy
+pandas
+python-dotenv
+gnani-vachana
