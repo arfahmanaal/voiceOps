@@ -30,7 +30,17 @@ class Retriever:
         passages = [f"{c['doc_title']} - {c['title']}\n{c['text']}" for c in self.chunks]
         self.matrix = self.embed(passages, "passage")
 
-    def search(self, query, k=5):
-        scores = self.matrix @ self.embed([query], "query")[0]
-        order = np.argsort(-scores)[:k]
-        return [(self.chunks[i], float(scores[i])) for i in order]
+    def search(self, queries, k=5, include_superseded=False):
+        if isinstance(queries, str):
+            queries = [queries]
+        vectors = self.embed(queries, "query")
+        scores = (self.matrix @ vectors.T).max(axis=1)
+        results = []
+        for index in np.argsort(-scores):
+            chunk = self.chunks[index]
+            if chunk["status"] == "superseded" and not include_superseded:
+                continue
+            results.append((chunk, float(scores[index])))
+            if len(results) == k:
+                break
+        return results
