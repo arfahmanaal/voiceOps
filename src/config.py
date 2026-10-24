@@ -13,3 +13,6 @@ TODAY = "2026-10-20"
 
 if DATASET_DIR not in sys.path:
     sys.path.insert(0, DATASET_DIR)
+
+if hasattr(sys.stdout, "reconfigure"):
+    sys.stdout.reconfigure(encoding="utf-8")

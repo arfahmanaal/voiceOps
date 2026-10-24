@@ -7,11 +7,11 @@ print(chat("You are ZentroMart's AI support assistant. Reply in one short senten
 print(lookup_order("8978 2837"))
 print(lookup_order("8978 2837", "4533")["status"])
 
-GnaniTTSClient().synthesize(
+'''GnaniTTSClient().synthesize(
     "Hello, this is ZentroMart's AI assistant.",
     voice="Kaveri",
     model="timbre-v2.5",
     language="en-IN",
     output_file="test.wav",
 )
-print("test.wav written")
+print("test.wav written") '''
