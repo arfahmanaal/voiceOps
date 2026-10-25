@@ -9,6 +9,13 @@ from src.textnorm import digit_runs, normalize_speech, split_runs
 from tools import create_ticket, lookup_order
 
 HIGH_VALUE = 10000
+CANCEL_SECTIONS = {
+    "shipped": ["CAN-2", "REF-1"],
+    "out_for_delivery": ["CAN-2", "REF-1"],
+    "delivery_attempted": ["CAN-2", "REF-1"],
+    "packed": ["CAN-1"],
+    "placed": ["CAN-1"],
+}
 HIDDEN = {"found", "verified", "order_id", "customer_id", "delivery_pincode", "items", "customer_first_name", "is_plus"}
 ISO = re.compile(r"\d{4}-\d{2}-\d{2}")
 SCRIPT = re.compile(r"[\u0900-\u097F]")
@@ -29,6 +36,7 @@ ANALYSIS_SYSTEM = (
     "damage_claim: reports a damaged, defective or wrong item;\n"
     "repeat_contact: says they have contacted support about this several times;\n"
     "refund_query: asks about a refund;\n"
+    "cancel_request: wants to cancel an order;\n"
     "item_hint: the product the customer refers to, else an empty string;\n"
     "search_query: a standalone English search query of at most 15 words using the conversation for context, keeping product names and payment methods, without dates or order numbers.\n"
     "All keys except language, item_hint and search_query are booleans."
@@ -219,7 +227,7 @@ class Agent:
         recent = "\n".join(f"{m['role']}: {m['content']}" for m in self.history[-4:])
         message = f"CONVERSATION SO FAR:\n{recent or 'none'}\n\nLATEST CUSTOMER MESSAGE:\n{text}"
         data = parse_json(chat(ANALYSIS_SYSTEM, [{"role": "user", "content": message}], temperature=0, max_tokens=800))
-        for key in ["needs_order", "wants_human", "legal", "unauthorized", "safety", "damage_claim", "repeat_contact", "refund_query"]:
+        for key in ["needs_order", "wants_human", "legal", "unauthorized", "safety", "damage_claim", "repeat_contact", "refund_query", "cancel_request"]:
             data[key] = bool(data.get(key, False))
         label = data.get("language")
         if label in LANGUAGES:
@@ -348,6 +356,18 @@ class Agent:
         queries = [analysis["search_query"] or text, strip_dates(text) or text]
         old = mentions_old_date(text) or self.has_old_delivery()
         hits = [chunk for chunk, _ in self.rag.retriever.search(queries, K, include_superseded=old)]
+        shipped_cancel = bool(
+            self.order
+            and analysis["cancel_request"]
+            and self.order.get("status") in ("shipped", "out_for_delivery", "delivery_attempted")
+        )
+        if self.order and analysis["cancel_request"]:
+            present = {chunk["id"] for chunk in hits}
+            hits = hits + [
+                self.rag.by_id[i]
+                for i in CANCEL_SECTIONS.get(self.order.get("status"), [])
+                if i in self.rag.by_id and i not in present
+            ]
         hits = hits + self.cross_references(hits)
         hit_ids = [chunk["id"] for chunk in hits]
         rules = [self.rag.by_id[i] for i in ALWAYS if i in self.rag.by_id and i not in hit_ids]
@@ -356,7 +376,12 @@ class Agent:
         context = "\n\n".join([describe_chunk(chunk) for chunk in hits] + [describe_product(p) for p in products])
         return {
             "decision": None,
-            "directive": "Answer the customer's latest message.",
+            "directive": "Answer the customer's latest message."
+            + (
+                " The order has already shipped: explain the options the policy gives and, for a refused or returned parcel, state the refund timeline from the policy in days."
+                if shipped_cancel
+                else ""
+            ),
             "order": bool(self.order),
             "context": context,
             "rules": "\n\n".join(describe_chunk(chunk) for chunk in rules),
