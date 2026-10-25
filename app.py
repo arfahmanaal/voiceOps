@@ -1,4 +1,5 @@
 import hashlib
+import html
 import tempfile
 import time
 from pathlib import Path
@@ -10,7 +11,7 @@ from src.kb import PRODUCTS_BY_SKU
 from src.rag import Rag
 from src.speech import speak, voice_turn
 
-st.set_page_config(page_title="ZentroMart AI Support", page_icon="🎧", layout="wide")
+st.set_page_config(page_title="ZentroMart AI Support", page_icon="🎧", layout="wide", initial_sidebar_state="collapsed")
 
 AUDIO_DIR = Path(tempfile.gettempdir()) / "zentromart_app"
 
@@ -54,6 +55,68 @@ SCRIPTS = {
         "There's an order on my account that I never placed.",
     ],
 }
+
+STYLE = """
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;700&family=Inter:wght@400;500;600&display=swap');
+html, body, [class*="css"], .stApp { font-family: 'Inter', sans-serif; }
+.block-container { max-width: 1200px; padding-top: 2rem; padding-bottom: 6rem; }
+footer, #MainMenu { visibility: hidden; }
+header[data-testid="stHeader"] { background: transparent; }
+.hero { padding: 56px 56px 48px; border-radius: 30px; border: 1px solid #25282D;
+  background: radial-gradient(900px 380px at 0% -20%, rgba(200,240,60,0.16), transparent 60%),
+              linear-gradient(180deg, #17191D, #0F1113); }
+.eyebrow { letter-spacing: 0.18em; font-size: 0.75rem; color: #C8F03C; font-weight: 600; }
+.hero h1 { font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: clamp(2.4rem, 5.2vw, 4.2rem);
+  line-height: 1.04; margin: 14px 0 16px; padding: 0; letter-spacing: -0.02em; }
+.hero h1 span { color: #C8F03C; }
+.hero p { max-width: 640px; color: #A8A8A0; font-size: 1.08rem; line-height: 1.6; margin: 0 0 22px; }
+.chips { display: flex; flex-wrap: wrap; gap: 10px; }
+.chips span { border: 1px solid #33373D; border-radius: 999px; padding: 7px 14px; font-size: 0.85rem; color: #D8D7D0; background: rgba(255,255,255,0.03); }
+.steps { display: grid; grid-template-columns: repeat(5, 1fr); gap: 12px; margin: 18px 0 8px; }
+.step { border: 1px solid #25282D; border-radius: 18px; padding: 14px 16px; background: #14161A; }
+.step b { display: block; font-family: 'Space Grotesk', sans-serif; font-size: 0.78rem; color: #C8F03C; letter-spacing: 0.08em; }
+.step strong { display: block; font-size: 0.98rem; margin: 4px 0 2px; }
+.step small { color: #8C8C85; font-size: 0.8rem; }
+.title { font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: 1.35rem; margin: 2px 0 10px; }
+[data-testid="stVerticalBlockBorderWrapper"] { border-radius: 24px !important; border: 1px solid #25282D !important; background: #14161A; padding: 6px 8px; }
+[data-testid="stExpander"] { border-radius: 16px; border: 1px solid #25282D; background: #14161A; }
+.stButton > button { border-radius: 999px; border: 1px solid #33373D; background: #1B1E23; color: #ECEBE5; font-weight: 500; }
+.stButton > button:hover { border-color: #C8F03C; color: #C8F03C; }
+.pills { display: flex; flex-wrap: wrap; gap: 8px; margin: 4px 0 10px; }
+.pill { display: flex; align-items: center; gap: 8px; border: 1px solid #2B2F35; border-radius: 999px; padding: 6px 12px; font-size: 0.82rem; background: #1B1E23; }
+.pill i { font-style: normal; color: #9C9C95; }
+.pill .dot { width: 8px; height: 8px; border-radius: 50%; background: #55585E; }
+.pill.on { border-color: #C8F03C; }
+.pill.on .dot { background: #C8F03C; box-shadow: 0 0 10px #C8F03C; }
+.chip { display: inline-block; border-radius: 999px; padding: 3px 12px; font-size: 0.8rem; font-weight: 600; background: #C8F03C; color: #0D0E10; }
+.chip.soft { background: transparent; color: #ECEBE5; border: 1px solid #4A4E55; }
+.label { color: #8C8C85; font-size: 0.78rem; letter-spacing: 0.08em; text-transform: uppercase; margin: 14px 0 4px; }
+[data-testid="stChatMessage"] { background: #1A1D21; border-radius: 18px; }
+@media (max-width: 800px) { .steps { grid-template-columns: 1fr 1fr; } .hero { padding: 32px 24px; } }
+</style>
+"""
+
+HERO = """
+<div class="hero">
+  <div class="eyebrow">ZENTROMART &nbsp;/&nbsp; VOICE SUPPORT</div>
+  <h1>Ask out loud.<br><span>Get the real answer.</span></h1>
+  <p>An AI support agent that listens, reads the company policy, checks who you are before sharing anything,
+  and talks back in English, Hindi or Hinglish.</p>
+  <div class="chips"><span>Answers from policy documents</span><span>Verifies before sharing</span><span>Hands over to a human</span></div>
+</div>
+<div class="steps">
+  <div class="step"><b>01</b><strong>Listen</strong><small>Gnani speech-to-text</small></div>
+  <div class="step"><b>02</b><strong>Understand</strong><small>LLM reads the request</small></div>
+  <div class="step"><b>03</b><strong>Check</strong><small>Policy search and order tools</small></div>
+  <div class="step"><b>04</b><strong>Answer</strong><small>Only from the documents</small></div>
+  <div class="step"><b>05</b><strong>Speak</strong><small>Gnani text-to-speech</small></div>
+</div>
+"""
+
+
+def pill(label, value, on=False):
+    return f'<div class="pill{" on" if on else ""}"><span class="dot"></span><b>{html.escape(label)}</b><i>{html.escape(str(value))}</i></div>'
 
 
 @st.cache_resource(show_spinner="Loading the knowledge base and the embedding model...")
@@ -148,27 +211,32 @@ st.session_state.just_created = None
 rag = load_rag()
 agent = st.session_state.agent
 
-with st.sidebar:
-    st.header("Demo controls")
-    speak_replies = st.toggle("Speak replies for typed messages", value=True)
-    st.button("New customer", on_click=reset, use_container_width=True)
-    st.divider()
-    st.selectbox("Demo script", list(SCRIPTS), key="script_name", on_change=change_script)
+st.markdown(STYLE, unsafe_allow_html=True)
+st.markdown(HERO, unsafe_allow_html=True)
+
+with st.expander("Demo controls", expanded=True):
+    c1, c2, c3, c4 = st.columns([3, 2, 2, 2])
+    c1.selectbox("Demo script", list(SCRIPTS), key="script_name", on_change=change_script)
     lines = SCRIPTS[st.session_state.script_name]
     position = st.session_state.script_pos
+    c2.write("")
+    c2.button("Send next line", on_click=next_script_line, use_container_width=True, disabled=position >= len(lines))
+    c3.write("")
+    c3.button("New customer", on_click=reset, use_container_width=True)
+    speak_replies = c4.toggle("Speak typed replies", value=True)
     if position < len(lines):
         st.caption(f"Next line ({position + 1}/{len(lines)}): {lines[position]}")
     else:
         st.caption("Script finished. Press New customer to restart.")
-    st.button("Send next line", on_click=next_script_line, use_container_width=True, disabled=position >= len(lines))
-    st.divider()
-    st.caption("Pipeline: customer audio, Gnani STT, agent (LLM + retrieval + tools), Gnani TTS, spoken reply.")
 
-st.title("ZentroMart AI Support")
+st.write("")
 left, right = st.columns([3, 2], gap="large")
+card = left.container(border=True)
+hood = right.container(border=True)
 
-with left:
-    audio = st.audio_input("Speak to the agent", key=f"mic{st.session_state.mic_key}", sample_rate=16000)
+with card:
+    st.markdown('<div class="title">Talk to the agent</div>', unsafe_allow_html=True)
+    audio = st.audio_input("Press the microphone, speak, press it again to send", key=f"mic{st.session_state.mic_key}", sample_rate=16000)
 typed = st.chat_input("...or type a message")
 
 pending = st.session_state.pending
@@ -187,7 +255,9 @@ try:
 except Exception as error:
     st.error(f"Something went wrong: {error}")
 
-with left:
+with card:
+    if not st.session_state.messages:
+        st.caption("No messages yet. Speak, type, or send a line from the demo script above.")
     for index, message in enumerate(st.session_state.messages):
         with st.chat_message(message["role"], avatar="🧑" if message["role"] == "user" else "🎧"):
             if message["role"] == "user" and message.get("voice"):
@@ -196,30 +266,37 @@ with left:
             if message.get("audio") and Path(message["audio"]).exists():
                 st.audio(message["audio"], autoplay=index == st.session_state.just_created)
 
-with right:
-    st.subheader("Behind the scenes")
-    status = st.columns(3)
-    status[0].metric("Customer verified", "yes" if agent.order else ("locked out" if agent.locked else "no"))
-    status[1].metric("Failed checks", agent.attempts)
-    status[2].metric("Ticket created", "yes" if agent.ticketed else "no")
-    st.caption(f"Order ID in session: {agent.order_id or 'none yet'} | reply language: {agent.language}")
+with hood:
+    st.markdown('<div class="title">Under the hood</div>', unsafe_allow_html=True)
+    verified = "yes" if agent.order else ("locked out" if agent.locked else "no")
+    st.markdown(
+        '<div class="pills">'
+        + pill("Verified", verified, bool(agent.order))
+        + pill("Failed checks", agent.attempts, agent.attempts > 0)
+        + pill("Ticket", "created" if agent.ticketed else "none", agent.ticketed)
+        + pill("Language", agent.language, True)
+        + "</div>",
+        unsafe_allow_html=True,
+    )
+    st.caption(f"Order ID in this session: {agent.order_id or 'none yet'}")
     assistant = [m for m in st.session_state.messages if m["role"] == "assistant"]
     if assistant:
         trace = assistant[-1]["trace"]
-        st.markdown(f"**Latest decision:** `{trace['decision']}`")
-        st.markdown("**What the customer said (after speech-to-text and cleanup):**")
+        soft = "" if trace["decision"] in ("answer", "escalate") else " soft"
+        st.markdown(f'<div class="label">Decision</div><span class="chip{soft}">{html.escape(trace["decision"])}</span>', unsafe_allow_html=True)
+        st.markdown('<div class="label">Heard (after speech-to-text and cleanup)</div>', unsafe_allow_html=True)
         st.code(trace["heard"] or "(nothing heard)", language=None)
-        st.markdown("**Tool calls this turn:**")
+        st.markdown('<div class="label">Tool calls this turn</div>', unsafe_allow_html=True)
         if trace["tools"]:
             for call in trace["tools"]:
                 st.code(call, language="python")
         else:
             st.caption("none")
         if trace["facts"]:
-            st.markdown("**Computed in code (not by the LLM):**")
+            st.markdown('<div class="label">Computed in code, not by the LLM</div>', unsafe_allow_html=True)
             for fact in trace["facts"]:
                 st.info(fact)
-        st.markdown("**Policy sections the answer was based on:**")
+        st.markdown('<div class="label">Policy sections used</div>', unsafe_allow_html=True)
         if trace["retrieved"]:
             show_sources(trace, rag)
         else:
@@ -229,4 +306,4 @@ with right:
                 for call in message["trace"]["tools"]:
                     st.code(call, language="python")
     else:
-        st.info("Speak, type, or use the demo script in the sidebar. Every step the agent takes shows up here.")
+        st.caption("Every step the agent takes shows up here: what it heard, the tools it called and the policy it used.")
