@@ -5,3 +5,4 @@ pandas
 python-dotenv
 gnani-vachana
 sounddevice
+streamlit>=1.50
