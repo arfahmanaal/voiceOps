@@ -421,4 +421,5 @@ class Agent:
             "tools": list(self.tools),
             "retrieved": plan.get("retrieved", []),
             "facts": facts,
+            "language": self.language,
         }

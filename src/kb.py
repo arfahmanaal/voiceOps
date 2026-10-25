@@ -58,8 +58,13 @@ PRODUCTS = load_products()
 PRODUCTS_BY_SKU = {product["sku"].upper(): product for product in PRODUCTS}
 
 
+def compact(text):
+    return re.sub(r"[^a-z0-9]", "", text.lower())
+
+
 def find_products(text):
     lowered = text.lower()
+    squeezed = compact(text)
     found = {}
     for sku in SKU.findall(text):
         product = PRODUCTS_BY_SKU.get(sku.upper())
@@ -67,6 +72,6 @@ def find_products(text):
             found[product["sku"]] = product
     for product in PRODUCTS:
         title = product["title"].lower()
-        if title in lowered or title.split(",")[0] in lowered:
+        if title in lowered or title.split(",")[0] in lowered or compact(title.split(",")[0]) in squeezed:
             found[product["sku"]] = product
     return list(found.values())
