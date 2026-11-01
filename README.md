@@ -25,8 +25,8 @@ Measured with my own scorer (key facts present, forbidden phrases absent, expect
  
 | Measure | Result |
 |---|---|
-| Step 1: prompt only, 52 questions | 51/52 |
-| Step 2: RAG, same questions | 47/52 |
+| Step 1: prompt only, 52 questions | 17/52 |
+| Step 2: RAG, same questions | 51/52 |
 | Retrieval hit / recall / MRR | 0.98 / 0.91 / 0.75 (first version: 0.72 / 0.57 / 0.52) |
 | Practice conversations (96 turns) | 84/96; expected tool calls matched on all 96 turns |
 | Speech-style practice text | 13/13 product rows found, 9/9 refund dates computed |
