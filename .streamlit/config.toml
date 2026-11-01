@@ -1,13 +1,23 @@
 [theme]
-base = "dark"
-primaryColor = "#C8F03C"
-backgroundColor = "#0D0E10"
-secondaryBackgroundColor = "#16181C"
-textColor = "#ECEBE5"
 font = "sans serif"
+baseRadius = "large"
+
+[theme.light]
+primaryColor = "#0A7A63"
+backgroundColor = "#F1F4F0"
+secondaryBackgroundColor = "#E3EAE5"
+textColor = "#14201B"
+borderColor = "#CBD6CE"
+
+[theme.dark]
+primaryColor = "#4FE3B5"
+backgroundColor = "#0A100E"
+secondaryBackgroundColor = "#14201C"
+textColor = "#E6EFEA"
+borderColor = "#26362F"
 
 [client]
-toolbarMode = "minimal"
+toolbarMode = "viewer"
 
 [browser]
 gatherUsageStats = false
