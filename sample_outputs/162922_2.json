@@ -1,0 +1,12 @@
+{
+  "file": "162922_2.wav",
+  "conversation": "162922",
+  "turn": 1,
+  "heard": "what is the time right now",
+  "reply": "I’m ZentroMart’s AI assistant. I don’t have the current time information; would you like me to connect you with a human colleague?",
+  "decision": "answer",
+  "tools": "",
+  "retrieved": "KB-00.2 ; RET-3 ; RET-2 ; RET-8 ; KB-00.3 ; KB-00.1 ; ESC-1",
+  "language": "en",
+  "error": ""
+}

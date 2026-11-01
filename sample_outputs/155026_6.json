@@ -1,0 +1,12 @@
+{
+  "file": "155026_6.wav",
+  "conversation": "155026",
+  "turn": 6,
+  "heard": "4533",
+  "reply": "Verification succeeded. Your order 89782837 was delivered on 15 October 2026. How may I assist you further?",
+  "decision": "answer",
+  "tools": "lookup_order(order_id=89782837, verification_value=4533)",
+  "retrieved": "",
+  "language": "en",
+  "error": ""
+}

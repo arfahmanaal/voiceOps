@@ -1,0 +1,12 @@
+{
+  "file": "155026_3.wav",
+  "conversation": "155026",
+  "turn": 3,
+  "heard": "there is an order in my account that i have never placed can you check it",
+  "reply": "A human colleague will review the ticket you created and contact you about the unauthorized order.",
+  "decision": "escalate",
+  "tools": "create_ticket()",
+  "retrieved": "",
+  "language": "en",
+  "error": ""
+}

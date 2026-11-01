@@ -1,0 +1,12 @@
+{
+  "file": "155026_4.wav",
+  "conversation": "155026",
+  "turn": 4,
+  "heard": "hello mujhe order ke baare mein help chaahiye aur order number hai 89782837",
+  "reply": "Could you please provide the last 4 digits of the registered phone number or the delivery pincode?",
+  "decision": "clarify",
+  "tools": "lookup_order(order_id=89782837)",
+  "retrieved": "",
+  "language": "en",
+  "error": ""
+}

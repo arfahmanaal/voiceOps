@@ -1,0 +1,12 @@
+{
+  "file": "155026_5.wav",
+  "conversation": "155026",
+  "turn": 5,
+  "heard": "5335",
+  "reply": "The value does not match. Please try again with the last 4 digits of the registered phone number or the delivery pincode.",
+  "decision": "clarify",
+  "tools": "lookup_order(order_id=89782837, verification_value=5335)",
+  "retrieved": "",
+  "language": "en",
+  "error": ""
+}

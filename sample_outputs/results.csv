@@ -1,0 +1,8 @@
+﻿file,conversation,turn,heard,reply,decision,tools,retrieved,language,error
+155026_1.wav,155026,1,how long does a refund to upi take,I am ZentroMart's AI assistant. Refunds to UPI are credited within 1 to 3 business days from the day the refund is initiated.,answer,,REF-2 ; FAQ-1 ; REF-1 ; RET-7 ; REF-3 ; KB-00.1 ; KB-00.3 ; ESC-1,en,
+155026_2.wav,155026,2,have a you order id can you tell me in general,"May I have your order ID, please?",clarify,,,en,
+155026_3.wav,155026,3,there is an order in my account that i have never placed can you check it,A human colleague will review the ticket you created and contact you about the unauthorized order.,escalate,create_ticket(),,en,
+155026_4.wav,155026,4,hello mujhe order ke baare mein help chaahiye aur order number hai 89782837,Could you please provide the last 4 digits of the registered phone number or the delivery pincode?,clarify,lookup_order(order_id=89782837),,en,
+155026_5.wav,155026,5,5335,The value does not match. Please try again with the last 4 digits of the registered phone number or the delivery pincode.,clarify,"lookup_order(order_id=89782837, verification_value=5335)",,en,
+155026_6.wav,155026,6,4533,Verification succeeded. Your order 89782837 was delivered on 15 October 2026. How may I assist you further?,answer,"lookup_order(order_id=89782837, verification_value=4533)",,en,
+162922_2.wav,162922,1,what is the time right now,I’m ZentroMart’s AI assistant. I don’t have the current time information; would you like me to connect you with a human colleague?,answer,,KB-00.2 ; RET-3 ; RET-2 ; RET-8 ; KB-00.3 ; KB-00.1 ; ESC-1,en,

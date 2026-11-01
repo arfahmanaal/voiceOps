@@ -1,0 +1,12 @@
+{
+  "file": "155026_1.wav",
+  "conversation": "155026",
+  "turn": 1,
+  "heard": "how long does a refund to upi take",
+  "reply": "I am ZentroMart's AI assistant. Refunds to UPI are credited within 1 to 3 business days from the day the refund is initiated.",
+  "decision": "answer",
+  "tools": "",
+  "retrieved": "REF-2 ; FAQ-1 ; REF-1 ; RET-7 ; REF-3 ; KB-00.1 ; KB-00.3 ; ESC-1",
+  "language": "en",
+  "error": ""
+}
